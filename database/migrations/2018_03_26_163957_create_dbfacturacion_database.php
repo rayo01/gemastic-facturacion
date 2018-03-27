@@ -14,24 +14,6 @@ class CreateDbfacturacionDatabase extends Migration
     public function up()
     {
         //
-        Schema::create('usuarios',function($table){
-          $table->increments('ID');
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
-
-          $table->string('Usuario',100)->required();
-          $table->string('Password',25)->required();
-          $table->tinyInteger('Estado')->required();
-          $table->unsignedInteger('Id_Perfil')->required();
-          $table->unsignedInteger('Id_Negocio')->required();
-          $table->string('UrlImagen',100)->nullable();
-
-          $table->foreign('Id_Perfil')->references('ID')->on('perfiles');
-          $table->foreign('Id_Negocio')->references('ID')->on('negocios');
-
-        });
-
         Schema::create('negocios',function($table){
           $table->increments('ID');
 
@@ -50,7 +32,6 @@ class CreateDbfacturacionDatabase extends Migration
           $table->string('RepLegal',150)->nullable();
           $table->tinyInteger('Estado')->required();//->nullable($value = false);
           $table->string('Ubigeo',16)->nullable();
-
         });
 
         Schema::create('perfiles',function($table){
@@ -62,7 +43,23 @@ class CreateDbfacturacionDatabase extends Migration
 
           $table->string('Nombre',50)->required();//->nullable($value = false);
           $table->text('Descripcion')->required();//->nullable($value = false);
+        });
 
+        Schema::create('usuarios',function($table){
+          $table->increments('ID');
+          $table->dateTime('FechaCreacion');
+          $table->dateTime('FechaModificacion');
+          $table->unsignedInteger('ID_Usuario');
+
+          $table->string('Usuario',100)->required();
+          $table->string('Password',25)->required();
+          $table->tinyInteger('Estado')->required();
+          $table->unsignedInteger('Id_Perfil')->required();
+          $table->unsignedInteger('Id_Negocio')->required();
+          $table->string('UrlImagen',100)->nullable();
+
+          $table->foreign('Id_Perfil')->references('ID')->on('perfiles');
+          $table->foreign('Id_Negocio')->references('ID')->on('negocios');
         });
 
         Schema::create('clientes',function($table){
@@ -81,7 +78,6 @@ class CreateDbfacturacionDatabase extends Migration
           $table->string('Email',100)->nullable();
           $table->tinyInteger('Estado')->required();//->nullable($value = false);
           $table->string('Ubigeo',16)->nullable();
-
         });
 
         Schema::create('tipo_comprobantes',function($table){
@@ -95,7 +91,6 @@ class CreateDbfacturacionDatabase extends Migration
           $table->string('Nombre',50)->required();//->nullable($value = false);
 
           $table->primary('ID');
-
         });
 
         Schema::create('numeracion_series',function($table){
@@ -112,7 +107,6 @@ class CreateDbfacturacionDatabase extends Migration
 
           $table->foreign('ID_TipoComprobante')->references('ID')->on('tipo_comprobantes');
           $table->foreign('ID_Negocio')->references('ID')->on('negocios');
-
         });
 
         Schema::create('impuestos',function($table){
@@ -127,7 +121,17 @@ class CreateDbfacturacionDatabase extends Migration
           $table->float('Fijo',15,4)->nullable();
 
           $table->primary('ID');
+        });
 
+        Schema::create('motivo_anulaciones', function($table){
+            $table->string('ID',3)->required();
+            $table->dateTime('FechaCreacion');
+            $table->dateTime('FechaModificacion');
+            $table->unsignedInteger('ID_Usuario');
+
+            $table->primary('ID');
+            $table->string('Nombre', 150)->required();
+            $table->text('Descripcion')->nullable();
         });
 
         Schema::create('ventas',function($table){
@@ -148,10 +152,10 @@ class CreateDbfacturacionDatabase extends Migration
           $table->float('DescuentoFijo',15,4)->nullable();
           $table->float('DescuentoPorcentual',15,4)->nullable();
           $table->tinyInteger('Estado')->required();
-          $table->unsignedInteger('ID_MotivoAnulacion')->nullable(); //falta tabla
+          $table->string('ID_MotivoAnulacion',3)->nullable(); //falta tabla
           $table->string('ID_TipoComprobante',2)->required();
           $table->string('ID_Impuesto',3)->required();
-          $table->unsignedInteger('ID_Negocio',15)->required();
+          $table->unsignedInteger('ID_Negocio')->required();
           $table->float('PorcentajeImpuesto',10,2)->required();
 
           $table->foreign('ID_Cliente')->references('ID')->on('clientes');
@@ -159,7 +163,71 @@ class CreateDbfacturacionDatabase extends Migration
           $table->foreign('ID_TipoComprobante')->references('ID')->on('tipo_comprobantes');
           $table->foreign('ID_Impuesto')->references('ID')->on('impuestos');
           $table->foreign('ID_Negocio')->references('ID')->on('negocios');
+        });
 
+        Schema::create('unidad_medidas',function($table){
+          $table->increments('ID');
+
+          $table->dateTime('FechaCreacion');
+          $table->dateTime('FechaModificacion');
+          $table->unsignedInteger('ID_Usuario');
+
+          $table->string('CodigoPeru',15)->required();
+          $table->string('Nombre',100)->required();
+          $table->string('CodigoSunat',15)->required();
+          $table->string('NombreSunat',100)->required();
+        });
+
+        Schema::create('fabricantes',function($table){
+          $table->increments('ID');
+
+          $table->dateTime('FechaCreacion');
+          $table->dateTime('FechaModificacion');
+          $table->unsignedInteger('ID_Usuario');
+
+          $table->string('Ruc',15)->nullable();
+          $table->string('RazonSocial',250)->required();
+          $table->string('Direccion',150)->nullable();
+          $table->string('Telefono',25)->nullable();
+          $table->string('Web',100)->nullable();
+        });
+
+        Schema::create('categorias', function($table){
+            $table->increments('ID');
+
+            $table->dateTime('FechaCreacion');
+            $table->dateTime('FechaModificacion');
+            $table->unsignedInteger('ID_Usuario');
+
+            $table->string('CodigoSunat', 50)->nullable();
+            $table->string('Nombre', 150)->required();
+            $table->text('Descripcion')->nullable();
+        });
+
+        Schema::create('productos', function($table){
+            $table->increments('ID');
+
+            $table->dateTime('FechaCreacion');
+            $table->dateTime('FechaModificacion');
+            $table->unsignedInteger('ID_Usuario');
+
+            $table->string('CodigoSunat', 50);
+            $table->unsignedInteger('ID_UnidadMedida')->required();
+            $table->string('Nombre', 150)->required();
+            $table->text('Descripcion')->nullable();
+            $table->unsignedInteger('ID_Categoria')->required();
+            $table->unsignedInteger('ID_Fabricante')->required();
+            $table->float('Stock', 15, 4)->required();
+            $table->tinyInteger('Estado')->required();
+            $table->float('StockMinimo', 15, 4)->required();
+            $table->float('Precio1', 15, 4)->required();
+            $table->float('Precio2', 15, 4)->nullable();
+            $table->float('Precio3', 15, 4)->nullable();
+            $table->float('PrecioRefCompra', 15, 4)->nullable();
+
+            $table->foreign('ID_UnidadMedida')->references('ID')->on('unidad_medidas');
+            $table->foreign('ID_Categoria')->references('ID')->on('categorias');
+            $table->foreign('ID_Fabricante')->references('ID')->on('fabricantes');
         });
 
         Schema::create('detalle_ventas',function($table){
@@ -186,78 +254,6 @@ class CreateDbfacturacionDatabase extends Migration
           $table->foreign('ID_Venta')->references('ID')->on('ventas');
           $table->foreign('ID_Producto')->references('ID')->on('productos');
           $table->foreign('ID_UnidadMedida')->references('ID')->on('unidad_medidas');
-
-        });
-
-        Schema::create('unidad_medidas',function($table){
-          $table->increments('ID');
-
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
-
-          $table->string('CodigoPeru',15)->required();
-          $table->string('Nombre',100)->required();
-          $table->string('CodigoSunat',15)->required();
-          $table->string('NombreSunat',100)->required();
-
-        });
-
-        Schema::create('fabricantes',function($table){
-          $table->increments('ID');
-
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
-
-          $table->string('Ruc',15)->nullable();
-          $table->string('RazonSocial',250)->required();
-          $table->string('Direccion',150)->nullable();
-          $table->string('Telefono',25)->nullable();
-          $table->string('Web',100)->nullable();
-
-        });
-
-        Schema::create('categorias', function($table){
-            $table->increments('ID');
-
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
-
-            $table->string('CodigoSunat', 50)->nullable();
-            $table->string('Nombre', 150)->required();
-            $table->text('Descripcion')->nullable();
-
-            $table->primary('ID');
-        });
-
-
-        Schema::create('productos', function($table){
-            $table->increments('ID');
-
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
-
-            $table->string('CodigoSunat', 50);
-            $table->unsignedInteger('ID_UnidadMedida')->required();
-            $table->string('Nombre', 150)->required();
-            $table->text('Descripcion')->nullable();
-            $table->unsignedInteger('ID_Categoria')->required();
-            $table->unsignedInteger('ID_Fabricante')->required();
-            $table->float('Stock', 15, 4)->required();
-            $table->tinyInteger('Estado')->required();
-            $table->float('StockMinimo', 15, 4)->required();
-            $table->float('Precio1', 15, 4)->required();
-            $table->float('Precio2', 15, 4)->nullable();
-            $table->float('Precio3', 15, 4)->nullable();
-            $table->float('PrecioRefCompra', 15, 4)->nullable();
-
-            $table->primary('ID');
-            $table->foreign('ID_UnidadMedida')->references('ID')->on('unidad_medidas');
-            $table->foreign('ID_Categoria')->references('ID')->on('categorias');
-            $table->foreign('ID_Fabricante')->references('ID')->on('fabricantes');
         });
 
         Schema::create('producto_empaques', function($table){
@@ -291,8 +287,6 @@ class CreateDbfacturacionDatabase extends Migration
             $table->string('Telefono', 25)->nullable();
             $table->string('Web', 100)->nullable();
             $table->tinyInteger('Estado')->required();
-
-            $table->primary('ID');
         });
 
         Schema::create('compras', function($table){
@@ -311,7 +305,6 @@ class CreateDbfacturacionDatabase extends Migration
             $table->string('ID_Impuesto')->required();
             $table->float('PorcentajeImpuesto', 10, 2)->required();
 
-            $table->primary('ID');
             $table->foreign('ID_Proveedor')->references('ID')->on('proveedores');
             $table->foreign('ID_Impuesto')->references('ID')->on('impuestos');
         });
@@ -349,8 +342,6 @@ class CreateDbfacturacionDatabase extends Migration
             $table->string('Telefono1', 25)->nullable();
             $table->string('Telefono2', 25)->nullable();
             $table->tinyInteger('Estado')->required();
-
-            $table->primary('ID');
         });
 
         Schema::create('motivo_movimientos', function($table){
@@ -362,8 +353,6 @@ class CreateDbfacturacionDatabase extends Migration
             $table->string('Nombre', 100)->required();
             $table->text('Descripcion')->nullable();
             $table->tinyInteger('Estado')->required();
-
-            $table->primary('ID');
         });
 
         Schema::create('movimientos', function($table){
@@ -378,7 +367,6 @@ class CreateDbfacturacionDatabase extends Migration
             $table->tinyInteger('Estado')->required();
             $table->unsignedInteger('ID_Almacen')->required();
 
-            $table->primary('ID');
             $table->foreign('ID_Motivo')->references('ID')->on('motivo_movimientos');
             $table->foreign('ID_Almacen')->references('ID')->on('almacenes');
         });
@@ -412,21 +400,7 @@ class CreateDbfacturacionDatabase extends Migration
             $table->tinyInteger('CpeEnviado')->required();
             $table->unsignedInteger('CodRespSunat')->nullable();
             $table->text('RespSunat')->nullable();
-
-            $table->primary('ID');
         });
-
-        Schema::create('motivo_anulaciones', function($table){
-            $table->string('ID',3)->required();
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
-
-            $table->primry('ID');
-            $table->string('Nombre', 150)->required();
-            $table->text('Descripcion')->nullable();
-        });
-
     }
 
     /**
@@ -460,6 +434,5 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::drop('detalle_movimientos');
         Schema::drop('seguimientos');
         Schema::drop('motivo_anulaciones');
-
     }
 }
