@@ -85,7 +85,7 @@ class CreateDbfacturacionDatabase extends Migration
         });
 
         Schema::create('tipo_comprobantes',function($table){
-          $table->string('ID',2);
+          $table->string('ID',2)->required();
 
           $table->dateTime('FechaCreacion');
           $table->dateTime('FechaModificacion');
@@ -116,7 +116,7 @@ class CreateDbfacturacionDatabase extends Migration
         });
 
         Schema::create('impuestos',function($table){
-          $table->string('ID',3);
+          $table->string('ID',3)->required();
 
           $table->dateTime('FechaCreacion');
           $table->dateTime('FechaModificacion');
@@ -148,7 +148,7 @@ class CreateDbfacturacionDatabase extends Migration
           $table->float('DescuentoFijo',15,4)->nullable();
           $table->float('DescuentoPorcentual',15,4)->nullable();
           $table->tinyInteger('Estado')->required();
-          $table->unsignedInteger('ID_MotivoAnulacion'); //falta tabla
+          $table->unsignedInteger('ID_MotivoAnulacion')->nullable(); //falta tabla
           $table->string('ID_TipoComprobante',2)->required();
           $table->string('ID_Impuesto',3)->required();
           $table->unsignedInteger('ID_Negocio',15)->required();
@@ -210,8 +210,8 @@ class CreateDbfacturacionDatabase extends Migration
           $table->dateTime('FechaModificacion');
           $table->unsignedInteger('ID_Usuario');
 
-          $table->string('Ruc',15)->unique()->required();
-          $table->string('RazonSocial',250)->nullable();
+          $table->string('Ruc',15)->nullable();
+          $table->string('RazonSocial',250)->required();
           $table->string('Direccion',150)->nullable();
           $table->string('Telefono',25)->nullable();
           $table->string('Web',100)->nullable();
@@ -273,7 +273,7 @@ class CreateDbfacturacionDatabase extends Migration
             $table->float('Precio3', 15, 4)->nullable();
             $table->float('Equivalencia', 15, 4)->required();
 
-            $table->primary('ID');
+            $table->primary(['ID_Producto','ID_UnidadMedida']);
             $table->foreign('ID_Producto')->references('ID')->on('productos');
             $table->foreign('ID_UnidadMedida')->references('ID')->on('unidad_medidas');
         });
@@ -285,7 +285,7 @@ class CreateDbfacturacionDatabase extends Migration
             $table-> dateTime('FechaModificacion');
             $table-> unsignedInteger('ID_Usuario');
 
-            $table->string('Ruc', 15)->unique(); //revisar nullable()
+            $table->string('Ruc', 15)->nullable();//->unique(); //revisar nullable()
             $table->string('RazonSocial', 250)->required();
             $table->string('Direccion', 150)->nullable();
             $table->string('Telefono', 25)->nullable();
@@ -301,7 +301,7 @@ class CreateDbfacturacionDatabase extends Migration
             $table->dateTime('FechaModificacion');
             $table->unsignedInteger('ID_Usuario');
 
-            $table->string('CompReferencia', 20)->unique(); //revisar nullable()
+            $table->string('CompReferencia', 20)->required(); //revisar nullable()
             $table->unsignedInteger('ID_Proveedor')->required();
             $table->dateTime('Fecha')->required();
             $table->float('Monto', 15, 4)->required();
@@ -416,6 +416,17 @@ class CreateDbfacturacionDatabase extends Migration
             $table->primary('ID');
         });
 
+        Schema::create('motivo_anulaciones', function($table){
+            $table->string('ID',3)->required();
+            $table->dateTime('FechaCreacion');
+            $table->dateTime('FechaModificacion');
+            $table->unsignedInteger('ID_Usuario');
+
+            $table->primry('ID');
+            $table->string('Nombre', 150)->required();
+            $table->text('Descripcion')->nullable();
+        });
+
     }
 
     /**
@@ -448,6 +459,7 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::drop('movimientos');
         Schema::drop('detalle_movimientos');
         Schema::drop('seguimientos');
-        // falta tabla 'movito_anulaciones'
+        Schema::drop('motivo_anulaciones');
+
     }
 }
