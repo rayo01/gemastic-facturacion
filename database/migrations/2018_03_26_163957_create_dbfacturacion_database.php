@@ -17,9 +17,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('negocios',function($table){
           $table->increments('ID');
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('Ruc',15);
           $table->string('RazonSocial',250)->required();//->nullable($value = false);
@@ -37,9 +37,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('perfiles',function($table){
           $table->increments('ID');
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('Nombre',50)->required();//->nullable($value = false);
           $table->text('Descripcion')->required();//->nullable($value = false);
@@ -47,9 +47,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('usuarios',function($table){
           $table->increments('ID');
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('Usuario',100)->required();
           $table->string('Password',25)->required();
@@ -65,9 +65,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('clientes',function($table){
           $table->increments('ID');
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('RazonSocial',250)->required();//->nullable($value = false);
           $table->string('TipoDocumento',2)->required();//->nullable($value = false);
@@ -83,9 +83,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('tipo_comprobantes',function($table){
           $table->string('ID',2)->required();
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('Abreviacion',3)->required();//->nullable($value = false);
           $table->string('Nombre',50)->required();//->nullable($value = false);
@@ -96,9 +96,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('numeracion_series',function($table){
           $table->increments('ID');
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('CodigoSerie',4)->required();//->nullable($value = false);
           $table->unsignedBigInteger('NumeroActual')->required();//->nullable($value = false);
@@ -112,9 +112,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('impuestos',function($table){
           $table->string('ID',3)->required();
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('Nombre',100)->required();//->nullable($value = false);
           $table->float('Porcentaje',10,2)->required();//->nullable($value = false);
@@ -125,9 +125,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('motivo_anulaciones', function($table){
             $table->string('ID',3)->required();
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->primary('ID');
             $table->string('Nombre', 150)->required();
@@ -137,9 +137,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('ventas',function($table){
           $table->increments('ID');
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('Serie',4)->required();
           $table->string('Numero',8)->required();
@@ -168,9 +168,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('unidad_medidas',function($table){
           $table->increments('ID');
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('CodigoPeru',15)->required();
           $table->string('Nombre',100)->required();
@@ -181,9 +181,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('fabricantes',function($table){
           $table->increments('ID');
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->string('Ruc',15)->nullable();
           $table->string('RazonSocial',250)->required();
@@ -195,9 +195,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('categorias', function($table){
             $table->increments('ID');
 
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->string('CodigoSunat', 50)->nullable();
             $table->string('Nombre', 150)->required();
@@ -207,9 +207,9 @@ class CreateDbfacturacionDatabase extends Migration
         Schema::create('productos', function($table){
             $table->increments('ID');
 
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->string('CodigoSunat', 50);
             $table->unsignedInteger('ID_UnidadMedida')->required();
@@ -232,9 +232,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('detalle_ventas',function($table){
 
-          $table->dateTime('FechaCreacion');
-          $table->dateTime('FechaModificacion');
-          $table->unsignedInteger('ID_Usuario');
+          $table->dateTime('FechaCreacion')->required();
+          $table->dateTime('FechaModificacion')->required();
+          $table->unsignedInteger('ID_Usuario')->required();
 
           $table->unsignedInteger('ID_Venta')->required();
           $table->unsignedInteger('ID_Producto')->required();
@@ -258,9 +258,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('producto_empaques', function($table){
             //$table -> increments('ID');
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->unsignedInteger('ID_Producto')->required();
             $table->unsignedInteger('ID_UnidadMedida')->required();
@@ -276,10 +276,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('proveedores', function($table){
             $table-> increments('ID');
-
-            $table-> dateTime('FechaCreacion');
-            $table-> dateTime('FechaModificacion');
-            $table-> unsignedInteger('ID_Usuario');
+            $table-> dateTime('FechaCreacion')->required();
+            $table-> dateTime('FechaModificacion')->required();
+            $table-> unsignedInteger('ID_Usuario')->required();
 
             $table->string('Ruc', 15)->nullable();//->unique(); //revisar nullable()
             $table->string('RazonSocial', 250)->required();
@@ -291,9 +290,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('compras', function($table){
             $table->increments('ID');
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->string('CompReferencia', 20)->required(); //revisar nullable()
             $table->unsignedInteger('ID_Proveedor')->required();
@@ -311,9 +310,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('detalle_compras', function($table){
             //$table -> increments('ID');
-            $table-> dateTime('FechaCreacion');
-            $table-> dateTime('FechaModificacion');
-            $table-> unsignedInteger('ID_Usuario');
+            $table-> dateTime('FechaCreacion')->required();
+            $table-> dateTime('FechaModificacion')->required();
+            $table-> unsignedInteger('ID_Usuario')->required();
 
             $table->unsignedInteger('ID_Compra')->required();
             $table->unsignedInteger('ID_Producto')->required();
@@ -332,10 +331,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('almacenes', function($table){
             $table->increments('ID');
-
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->string('Nombre', 100)->required();
             $table->string('Direccion', 150)->required();
@@ -346,9 +344,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('motivo_movimientos', function($table){
             $table->increments('ID');
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->string('Nombre', 100)->required();
             $table->text('Descripcion')->nullable();
@@ -357,9 +355,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('movimientos', function($table){
             $table->increments('ID');
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->dateTime('Fecha')->required();
             $table->unsignedInteger('ID_Motivo')->required();
@@ -373,9 +371,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('detalle_movimientos', function($table){
             //$table -> increments('ID');
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->unsignedInteger('ID_Movimiento')->required();
             $table->unsignedInteger('ID_Producto')->required();
@@ -389,9 +387,9 @@ class CreateDbfacturacionDatabase extends Migration
 
         Schema::create('seguimientos', function($table){
             $table->increments('ID');
-            $table->dateTime('FechaCreacion');
-            $table->dateTime('FechaModificacion');
-            $table->unsignedInteger('ID_Usuario');
+            $table->dateTime('FechaCreacion')->required();
+            $table->dateTime('FechaModificacion')->required();
+            $table->unsignedInteger('ID_Usuario')->required();
 
             $table->string('RUC', 15)->required();
             $table->string('Serie', 4)->required();
