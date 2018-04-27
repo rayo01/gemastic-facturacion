@@ -53,7 +53,7 @@
         <h3 class="box-title">
 
         <!-- Button modal create -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" id="buttonn" data-target="#modal-create" data-backdrop="static" data-keyboard="false"><!--data-target="#modal"-->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create"><!--data-target="#modal"-->
           Agregar Presentacion
         </button>
 
@@ -110,7 +110,7 @@
         <button type="button" class="close"
         data-dismiss="alert" aria-hidden="true">x</button>
         No se tiene ningun producto_empaque derivado registrado <a href="#"
-        class="alert-link">Registre Productos</a>
+        class="alert-link">Registre producto_empaque</a>
       </div>
       @else
         @if(session('mensaje'))
@@ -198,7 +198,9 @@
                   <select class="form-control select2" style="width: 100%;" name="ID_UnidadMedida" required>
                     <option value="" select >seleccione unidad de medida</opcion>
                     @foreach($unidad_medidas as $unidad_medida)
+                      @if($unidad_medida->ID != $producto->ID_UnidadMedida)
                       <option value="{!! $unidad_medida->ID !!}" >{{ $unidad_medida->CodigoPeru }} {{ $unidad_medida->Nombre }} </opcion>
+                      @endif
                     @endforeach
                   </select>
                 </div>
@@ -245,7 +247,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" id="limpiar-create" class="btn btn-primary pull-left" data-dismiss="modal">Salir</button>
-        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
         <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span> Guardar Producto</button>
       </div>
       </form>
@@ -322,8 +323,7 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" onclick="myFunction({{ $producto_empaque->ID_UnidadMedida }})" class="btn btn-primary pull-left" data-dismiss="modal">Salir</button>
-        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+        <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">Salir</button>
         <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span> Guardar cambios</button>
       </div>
       </form>
@@ -351,19 +351,21 @@
 
 @section('jsope')
 
+<!-- Reset forms -->
 <script>
-   $("#limpiar-create").click(function(event) {
-	   $("#form-create")[0].reset();
-   });
+$('#modal-create').on('hidden.bs.modal', function (e) {
+  $('#form-create')[0].reset();
+});
 </script>
-<script>
-  function myFunction(item) {
-    var str1 = "#form";
-    var res = str1.concat(item);
-    $(res)[0].reset();
 
-}
+@foreach($unidad_medidas as $unidad_medida)
+<script>
+$('#modal-update{{ $unidad_medida->ID }}').on('hidden.bs.modal', function (e) {
+  $('#form{{ $unidad_medida->ID }}')[0].reset();
+});
 </script>
+@endforeach
+<!-- /.Reset forms -->
 
 <!-- Responsive -->
 <script>

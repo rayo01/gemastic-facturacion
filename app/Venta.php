@@ -26,8 +26,11 @@ class Venta extends Model
     {
         return $this->belongsTo('App\Tipo_Comprobante', 'ID_TipoComprobante', 'ID');
     }
-    public function Impuesto()
+
+    public function Impuestos()
     {
         return $this->belongsTo('App\Impuesto', 'ID_Impuesto', 'ID');
     }
+
+
 }

@@ -36,106 +36,43 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => ['administrador']], function () {
 
     Route::get('import', 'ImportController@import');
-
-    //Route::resource('perfiles','PerfilController');
-
-    //Route::resource('negocios','NegocioController');
-
-    //Route::get('negocios/{id}/{estado}','NegocioController@modificarEstado');
-
-    //yo Route::resource('clientes','ClienteController');
-
-
-
-
-
-    /*Route::get('/api', 'VentaController@productos')->name('api.index');
-    Route::get('/listadoproductos', 'ProductoController@listado_productos')->name('listado.index');
-    Route::post('agregarproducto/{id}', 'ProductoController@agregar_producto')/*->name('api_recuperar.index')*//*;
-    Route::get('listarproductos', 'ProductoController@listar_productos')/*->name('api_recuperar.index')*//*;*/
-    /*Route::post('/agregarproducto',function(){
-      if(Request::ajax()){
-        return var_dump(Response::json(Request::all()));
-      }
-    });*/
-
-    //yo Route::resource('ventas','VentaController');
-
-    //yo Route::resource('detalle_ventas','Detalle_VentaController');
-
-    //Route::put('producto_empaques/{id}', 'Producto_EmpaqueController@update');
-    //Route::delete('producto_empaques/{id}', 'Producto_EmpaqueController@destroy');
-
     Route::resource('almacenes','AlmacenController');
-
     Route::get('almacenes/{id}/{estado}','AlmacenController@modificarEstado');
-
-
-
     Route::resource('tipo_comprobantes','Tipo_ComprobanteController');
-
     Route::resource('numeracion_series','Numeracion_SerieController');
-
     Route::resource('motivo_movimientos','Motivo_MovimientoController');
-
     Route::get('motivo_movimientos/{id}/{estado}','Motivo_MovimientoController@modificarEstado');
-
-
-
     Route::resource('usuarios','UsuarioController');
-
     Route::get('usuarios/{id}/{estado}','UsuarioController@modificarEstado');
-
     Route::get('clientes/{id}/{estado}','ClienteController@modificarEstado');
-
-
-
-
 
 });
 
 Route::group(['middleware' => ['vendedor']], function () {
 
     Route::resource('categorias','CategoriaController');
-
     Route::resource('unidad_medidas','Unidad_MedidaController');
-
     Route::resource('fabricantes','FabricanteController');
-
     Route::resource('impuestos','ImpuestoController');
     Route::post('impuestos/{nombre}', 'ImpuestoController@recuperar_impuesto')/*->name('api_recuperar.index')*/;
-
     Route::resource('productos','ProductoController');
-
     Route::post('producto_empaques/{id}', 'Producto_EmpaqueController@nuevo');
-    //Route::put('producto_empaques/{id}', 'Producto_EmpaqueController@update');
-    //Route::delete('producto_empaques/{id}', 'Producto_EmpaqueController@destroy');
-
     Route::get('/productoslistado', 'ProductoController@productoslistado')->name('productoslistado.index');
-
     Route::get('productos/{id}/{estado}','ProductoController@modificarEstado');
-
     Route::resource('producto_empaques','Producto_EmpaqueController');
-
     Route::resource('clientes','ClienteController');
-
     Route::get('/numeracion_serie/{idcomprobante}/{idnegocio}','Numeracion_SerieController@obtenerNumeracionSerie');
-
     Route::get('/api', 'VentaController@productos')->name('api.index');
     Route::get('/listadoproductos', 'ProductoController@listado_productos')->name('listado.index');
     Route::post('agregarproducto/{id}', 'ProductoController@agregar_producto')/*->name('api_recuperar.index')*/;
     Route::get('/listarproductos', 'ProductoController@listar_productos')->name('api_recuperar.index');
-
     Route::post('ventas/create','VentaController@store');
-    Route::post('/nota_creditos/{id}','Nota_CreditoController@nuevo');
-    Route::post('/nota_debitos/{id}','Nota_DebitoController@nuevo');
-
+    Route::resource('nota_creditos','Nota_CreditoController');
+    Route::get('generar_credito/{id}','Nota_CreditoController@nuevo');
+    Route::resource('nota_debitos','Nota_DebitoController');
+    Route::get('generar_debito/{id}','Nota_DebitoController@nuevo');
     Route::resource('ventas','VentaController');
-
-
-
     Route::get('ventas/{id}/{estado}','VentaController@modificarEstado');
-
     Route::resource('detalle_ventas','Detalle_VentaController');
 
 });

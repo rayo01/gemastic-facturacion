@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call(Numeracion_SeriesTableSeeder::class);
         $this->call(ImpuestosTableSeeder::class);
         $this->call(Motivo_AnulacionesTablaSeeder::class);
-        $this->call(Motivo_MovimientosTablaSeeder::class);
-        $this->call(AlmacenesTablaSeeder::class);
+        $this->call(Motivo_MovimientosTableSeeder::class);
+        $this->call(AlmacenesTableSeeder::class);
+        
     }
 }

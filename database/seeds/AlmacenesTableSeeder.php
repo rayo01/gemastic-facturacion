@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
-class AlmacenesTablaSeeder extends Seeder
+class AlmacenesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

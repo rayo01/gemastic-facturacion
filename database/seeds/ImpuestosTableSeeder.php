@@ -21,7 +21,7 @@ class ImpuestosTableSeeder extends Seeder
             'FechaModificacion' => $datetime,
             'ID_Usuario' => 1,
             'Nombre' => 'IGV',
-            'Porcentaje' => 0.18,
+            'Porcentaje' => 18,
         ]);
     }
 }

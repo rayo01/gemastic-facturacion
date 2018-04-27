@@ -14,7 +14,7 @@ class Detalle_Movimiento extends Model
     //protected $primaryKey ='ID_Producto';
 
 
-    protected $primaryKey = array('ID_Movimiento','ID_Producto');
+    protected $primaryKey = array('ID_Movimiento','ID_Producto','ID_UnidadMedida');
 
     /**
     *
@@ -29,6 +29,10 @@ class Detalle_Movimiento extends Model
     public function Producto()
     {
         return $this->belongsTo('App\Producto','ID_Producto','ID');
+    }
+    public function Unidad_Medida()
+    {
+        return $this->belongsTo('App\Unidad_Medida','ID_UnidadMedida','ID');
     }
 
 }

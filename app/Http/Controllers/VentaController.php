@@ -115,6 +115,7 @@ class VentaController extends Controller
             $Venta->PorcentajeImpuesto= round($request->get('nuevoImpuestoVenta'),2);
             $Venta->save();
 
+            //registrar movimiento
             $Movimiento= new Movimiento;
             $Movimiento->Fecha = $Fecha;
 
@@ -159,6 +160,7 @@ class VentaController extends Controller
             {
                 //$detalle=(array)$detalles;
                 $id_producto="";
+                $id_unidadmedida="";
                 //$descontar_stock=0.0;
                 $Venta_detalle = new Detalle_Venta;
                 $Venta_detalle->ID_Venta = $venta->ID;
@@ -171,6 +173,7 @@ class VentaController extends Controller
                     $Venta_detalle->ID_Producto=$detalle->id;
                     $unidadmedida=Producto::where('productos.ID', $detalle->id)->select('productos.ID_UnidadMedida')->first();
                     $Venta_detalle->ID_UnidadMedida=$unidadmedida['ID_UnidadMedida'];
+                    $id_unidadmedida=$unidadmedida['ID_UnidadMedida'];
                     $id_producto=$detalle->id;
                     $equivalencia=1;
                 }
@@ -179,6 +182,7 @@ class VentaController extends Controller
                 {
                     $Venta_detalle->ID_Producto=$claves[0];
                     $Venta_detalle->ID_UnidadMedida=$claves[1];
+                    $id_unidadmedida=$claves[1];
                     $producto_empaque = Producto_Empaque::where('ID_Producto', $claves[0])->where('ID_UnidadMedida', $claves[1])->first();
                     //$descontar_stock=$detalle->cantidad*$producto_empaque->Equivalencia;
                     $equivalencia=$producto_empaque->Equivalencia;
@@ -197,12 +201,14 @@ class VentaController extends Controller
                 $Venta_detalle->MontoReal=round($detalle->montoReal,4);
                 $Venta_detalle->Impuesto=round($detalle->impuesto_lineal,4);
                 $Venta_detalle->Total=round($detalle->total,4);
+                $Venta_detalle->Equivalencia=$equivalencia;
                 $Venta_detalle->Estado="0";
                 $Venta_detalle->save();
 
-                //modificar stock
-                $detalle_movimiento = Detalle_Movimiento::where('ID_Movimiento', $id_movimiento)->where('ID_Producto',  $id_producto)->first();
-                if(count($detalle_movimiento)==0)
+                //registrar detalle del movimiento
+                $detalle_movimiento = Detalle_Movimiento::where('ID_Movimiento', $id_movimiento)->where('ID_Producto',  $id_producto)
+                ->where('ID_UM',  $id_producto)->get();
+                if($detalle_movimiento->isEmpty()) // crear el detalle
                 {
                     $detalle_Movimiento = new Detalle_Movimiento;
                     $detalle_Movimiento->FechaCreacion = $Fecha;
@@ -211,24 +217,24 @@ class VentaController extends Controller
 
                     $detalle_Movimiento->ID_Movimiento=$id_movimiento;
                     $detalle_Movimiento->ID_Producto=$id_producto;
+                    $detalle_Movimiento->ID_UM=$id_unidadmedida;
                     $detalle_Movimiento->TipoMovimiento="SAL";
                     $detalle_Movimiento->Cantidad=round(($detalle->cantidad)*$equivalencia,4);
                     $detalle_Movimiento->save();
                 }
                 else//existe
                 {
-                  //$detalle_Movimiento = Detalle_Movimiento::where('ID_Movimiento', $id_movimiento)->where('ID_Producto',  $id_producto)->first();
-                  //var_dump($detalle_Movimiento);
-                  $cantidad_actual=$detalle_movimiento->Cantidad;
-                  $añadir=round($detalle->cantidad*$equivalencia,4);
-                  $detalle_movimiento->Cantidad=10;
-                  $detalle_movimiento->save();
+                  $actual=round( $detalle_Movimiento->Cantidad + round(($detalle->cantidad)*$equivalencia,4), 4);
+                  DB::table('detalle_movimientos')
+                    ->where('ID_Movimiento', $id_movimiento)
+                    ->where('ID_Producto', $id_producto)
+                    ->where('ID_UM', $id_unidadmedida)
+                    ->update(['FechaCreacion' => $Fecha, 'FechaModificacion' => $Fecha, 'ID_Usuario' => Auth::id(), 'Cantidad' => $actual]);
                 }
 
-
-
                 $producto = Producto::findOrFail($id_producto);
-                $producto->Stock=round(($detalle->stock)*$equivalencia,4);
+                $producto->Stock=$producto->Stock-round(($detalle->cantidad)*$equivalencia,4);
+                //$producto->Stock=round(($detalle->stock)*$equivalencia,4);
                 $producto->save();
 
                 //registrar movimiento
@@ -237,11 +243,9 @@ class VentaController extends Controller
 
         else
         {
-
             return redirect('/ventas/create')->with('alert', 'error');
 
         }
-
         return redirect('/ventas/create')->with('alert', 'success');
 
     }
@@ -255,6 +259,38 @@ class VentaController extends Controller
     public function show($id)
     {
         //
+        $venta = Venta::where('ID', $id)->first();
+        $usuario = Auth::user()->where('id', $id)->first();
+        //var_dump($venta);
+        /*$detalle_ventas = Detalle_Venta::where('ID_Venta', $id)
+        ->join('unidad_medidas','detalle_ventas.ID_UnidadMedida','=','unidad_medidas.ID')
+        ->join('productos','productos.ID','=','detalle_ventas.ID_Producto')
+        ->join('producto_empaques','productos.ID','=','producto_empaques.ID_Producto')
+        ->select(DB::raw("CONCAT(detalle_ventas.ID_Producto,'-',unidad_medidas.ID) as ID"),'productos.Nombre as Nombre',DB::raw('productos.Stock / producto_empaques.Equivalencia as Stock'),'unidad_medidas.Nombre as UnidadMedida','producto_empaques.Precio1 as Precio1','producto_empaques.Precio2 as Precio2','producto_empaques.Precio3 as Precio3')
+        ->first();*/
+
+        //var_dump($detalle_ventas);
+        $productos_generales=DB::table('detalle_ventas')
+        ->where('detalle_ventas.ID_Venta',$id)
+        ->join('productos','productos.ID','=','detalle_ventas.ID_Producto')
+        ->join('unidad_medidas','detalle_ventas.ID_UnidadMedida','=','unidad_medidas.ID')
+
+        ->select('productos.ID','productos.Nombre','detalle_ventas.Cantidad','detalle_ventas.PrecioUnitario','detalle_ventas.DescuentoFijo','detalle_ventas.DescuentoPorcentual','detalle_ventas.Impuesto','productos.Stock','unidad_medidas.Nombre as UnidadMedida','detalle_ventas.PrecioUnitario','detalle_ventas.Total')
+        ->get();
+        $productos_empaques=DB::table('detalle_ventas')
+        ->where('detalle_ventas.ID_Venta',$id)
+        ->join('producto_empaques','producto_empaques.ID_Producto','=','detalle_ventas.ID_Producto')
+        ->where('detalle_ventas.ID_UnidadMedida','producto_empaques.ID_UnidadMedida')
+        ->join('unidad_medidas','detalle_ventas.ID_UnidadMedida','=','unidad_medidas.ID')
+        ->join('productos','productos.ID','=','detalle_ventas.ID_Producto')
+
+        ->select(DB::raw("CONCAT(producto_empaques.ID_Producto,'-',unidad_medidas.ID) as ID"),'productos.Nombre','detalle_ventas.Cantidad','detalle_ventas.PrecioUnitario','detalle_ventas.DescuentoFijo','detalle_ventas.DescuentoPorcentual','detalle_ventas.Impuesto',DB::raw('productos.Stock / producto_empaques.Equivalencia as Stock'),'unidad_medidas.Nombre as UnidadMedida','detalle_ventas.PrecioUnitario','detalle_ventas.Total')
+        ->get();
+        $detalle_ventas=$productos_generales->union($productos_empaques);
+
+        //var_dump($detalle_ventas);
+        //return Datatables::of($productos)->make(true);
+        return view('ventas.show',['venta'=>$venta,'detalle_ventas'=>$detalle_ventas,'usuario'=>$usuario]);
 
     }
 

@@ -155,15 +155,29 @@ URL::asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap
     					<ul class="nav nav-pills">
 
                   <!-- Button modal edit -->
-                  <button type="button" class="btn btn-warning" onClick="location.href='{!! action('VentaController@edit' , $venta->ID) !!}'">
-                  <span class="glyphicon glyphicon-pencil"></span>
+                  <button type="button" class="btn btn-warning" onClick="location.href='{!! action('VentaController@show' , $venta->ID) !!}'">
+                  <span class="glyphicon glyphicon-list-alt"></span>
                   </button>
 
                   <!-- Button modal edit -->
-                  <button type="button" class="btn btn-default btnNotaCredito"  onClick="location.href='{!! action('Nota_CreditoController@nuevo' , $venta->ID) !!}'" >Nota de Credito    <span  class="glyphicon glyphicon-remove" ></span></button>
 
-                  <!-- Button modal edit -->
-                  <button type="button" class="btn btn-default btnNotaDebito"  onClick="location.href='{!! action('Nota_DebitoController@nuevo' , $venta->ID) !!}'">Nota de Debito</button>
+                  <button type="button" class="btn btn-danger btnNotaCredito"   idVenta="{{ $venta->ID }}" >Nota de Credito</button> <!--onClick="location.href='{!! action('Nota_CreditoController@destroy' , $venta->ID) !!}'"-->
+
+                <!--
+                <form method="post" action="{!! action('Nota_CreditoController@destroy',$venta->ID ) !!}"
+                            onclick="return confirm('Se generara nota de credito, ¿Estas Seguro?');">
+                            {!! csrf_field() !!}
+                            {!! method_field('DELETE') !!}
+                            <div>
+                              <button type="submit" class="btn btn-default">Nota de Credito
+                              </button>
+                            </div>
+                          </form>
+                    -->
+
+
+                  <!--  Button modal edit -->
+                  <button type="button" class="btn btn-danger btnNotaDebito" idVenta="{{ $venta->ID }}">Nota de Debito</button>
 
     					</ul>
     				</td>
@@ -241,7 +255,6 @@ URL::asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap
 </script>
 <!-- /.Responsive -->
 
-<!-- Delete sweetalert -->
 <script>
 $(".tabla").on('click', 'button.btnActivar', function(){
   var idVenta = $(this).attr("idVenta");
@@ -285,20 +298,158 @@ $(".tabla").on('click', 'button.btnActivar', function(){
 
 $(".tabla").on('click', 'button.btnNotaCredito', function(){
 
-    //var idVenta = $(this).attr("idVenta");
-    //window.location.href = "nota_creditos/"+idVenta;
+    swal({
+        title: 'Seguro que quieres crear la nota de credito?',
+        text: "se generara la nota de credito de la venta!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Generar!',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
 
+            var idVenta = $(this).attr("idVenta");
+
+            $.ajax({
+              type: "GET",
+              url: "/generar_credito/"+idVenta,
+              dataType: 'json',
+
+              success: function (msj){
+
+                swal(
+                  'Generado!',
+                  'La nota de credito se ha generado correctamente.',
+                  'success'
+                )
+
+              },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Status: " + textStatus); alert("Error: " + errorThrown);
+              }
+            });
+
+            /*window.location.href = "/generar_credito/"+idVenta;
+            swal(
+              'Generado!',
+              'Nota de credito generado.',
+              'success'
+            )*/
+
+        }
+    })
 
 })
 
 $(".tabla").on('click', 'button.btnNotaDebito', function(){
 
-    //var idVenta = $(this).attr("idVenta");
-    //window.location.href = "nota_debitos/"+idVenta;
+    var idVenta = $(this).attr("idVenta");
 
+    swal({
+        title: 'Seguro que quieres crear la nota de debito?',
+        text: "se generara la nota de debito de la venta!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Generar!',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
 
+            $.ajax({
+              type: "GET",
+              url: "/generar_debito/"+idVenta,
+              dataType: 'json',
+
+              success: function (msj){
+
+                swal(
+                  'Generado!',
+                  'La nota de debito se ha generado correctamente.',
+                  'success'
+                )
+              },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Status: " + textStatus); alert("Error: " + errorThrown);
+              }
+            });
+        }
+    })
 })
 
+</script>
+
+
+
+
+<!-- Delete sweetalert -->
+<script>
+$("#tabla").on("click", ".btnEliminarNegocio", function(){
+
+  swal({
+
+    title: '¿Esta seguro de borrar el negocio?',
+    text: "!Si no lo esta puede cancear la accion!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, borrar negocio!',
+    cancelButtonText: 'Cancelar!',
+    confirmButtonClass: 'btn btn-success',
+    cancelButtonClass: 'btn btn-danger',
+    showCloseButton: true,
+    //allowOutsideClick: false,
+    reverseButtons: true
+
+  }).then((result) => {
+
+    if (result.value) {
+      var idNegocio = $(this).attr("idNegocio");
+      var token = $(this).data("token");
+
+      $.ajax({
+        type: "DELETE",
+        url: "/negocios/"+idNegocio,
+        dataType: 'json',
+        data: {
+          "id": idNegocio,
+          "_method": 'DELETE',
+          "_token": token,
+        },
+        success: function (msj){
+
+
+  				swal({
+  					  type: "success",
+  					  title: "El negocio ha sido borrado correctamente",
+  					  showConfirmButton: true,
+  					  confirmButtonText: "Cerrar",
+  					  closeOnConfirm: false
+  					  }).then(function(result) {
+  								if (result.value) {
+
+  								window.location = "/negocios";
+
+  								}
+  							})
+
+
+          //window.location.href = '/negocios';
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+              alert("Status: " + textStatus); alert("Error: " + errorThrown);
+        }
+      });
+
+    }
+  })
+})
 </script>
 <!-- /.Delete sweetalert -->
 

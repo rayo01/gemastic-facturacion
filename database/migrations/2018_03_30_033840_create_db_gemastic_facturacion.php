@@ -271,6 +271,7 @@ class CreateDbGemasticFacturacion extends Migration
             $table->float('MontoReal',15,4)->required();
             $table->float('Impuesto',15,4)->required();
             $table->float('Total',15,4)->required();
+            $table->float('Equivalencia', 15, 4)->required();
             $table->tinyInteger('Estado')->required();
 
             $table->primary(['ID_Venta','ID_Producto','ID_UnidadMedida']);
@@ -398,7 +399,7 @@ class CreateDbGemasticFacturacion extends Migration
               $table->float('Total', 15, 4)->required();
               $table->tinyInteger('Estado')->required();
 
-              $table->primary(['ID_Compra', 'ID_Producto']);
+              $table->primary(['ID_Compra', 'ID_Producto','ID_UnidadMedida']);
               $table->foreign('ID_Compra')->references('ID')->on('compras');
               $table->foreign('ID_Producto')->references('ID')->on('productos');
               $table->foreign('ID_UnidadMedida')->references('ID')->on('unidad_medidas');
@@ -452,10 +453,11 @@ class CreateDbGemasticFacturacion extends Migration
 
               $table->unsignedInteger('ID_Movimiento')->required();
               $table->unsignedInteger('ID_Producto')->required();
+              $table->unsignedInteger('ID_UM')->required();
               $table->string('TipoMovimiento', 3)->required();
               $table->float('Cantidad', 15, 4)->required();
 
-              $table->primary(['ID_Movimiento', 'ID_Producto']);
+              $table->primary(['ID_Movimiento', 'ID_Producto','ID_UM']);
               $table->foreign('ID_Movimiento')->references('ID')->on('movimientos');
               $table->foreign('ID_Producto')->references('ID')->on('productos');
           });

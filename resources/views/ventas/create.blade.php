@@ -1,7 +1,6 @@
 @extends(Auth::user()['Id_Perfil'] == 1 ? 'layout.layout' : 'layout.layoutVendedor')
 
 @section('estilos')
-<!-- Page Data -->
 
 <!-- DataTables -->
 
@@ -9,16 +8,14 @@
 
 <link rel="stylesheet" href="/adminlte/bower_components/datatables.net-bs/css/responsive.bootstrap.min.css">
 
-
-
 <style>
-  .modal-header {
-      background-color: STEELBLUE;
-      color:white !important;
-      font-size: 40px;
-  }
+.modal-header {
+    background-color: STEELBLUE;
+    color:white !important;
+    font-size: 40px;
+}
 
-  .example-modal .modal {
+.example-modal .modal {
     position: relative;
     top: auto;
     bottom: auto;
@@ -26,21 +23,21 @@
     left: auto;
     display: block;
     z-index: 1;
-  }
+}
 
-  .example-modal .modal {
+.example-modal .modal {
     background: transparent !important;
+}
 
-  }
-  input[type=number]::-webkit-outer-spin-button,
-  input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-  }
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-  input[type=number] {
-      -moz-appearance:textfield;
-  }
+input[type=number] {
+    -moz-appearance:textfield;
+}
 </style>
 <!-- /.Modal adminlte -->
 
@@ -652,31 +649,6 @@ if(exist){
     });
   }
 }
-
-  var msg = '{{Session::get('alert')}}';
-  var exist = '{{Session::has('alert')}}';
-  if(exist){
-    if(msg == 'error'){
-      swal({
-        type: "error",
-        title: 'Error!',
-        text: 'Debe seleccionar al menos un producto',
-        showConfirmButton: true,
-        confirmButtonText: "Cerrar",
-
-      });
-    }
-    else{
-      swal({
-        type: "success",
-        title: 'Guardado!',
-        text: 'La venta se guardo correctamente',
-        showConfirmButton: true,
-        confirmButtonText: "Cerrar",
-      });
-    }
-  }
-
 
 $("#limpiar-create").click(function(event) {
   $("#form-create")[0].reset();
@@ -1406,7 +1378,7 @@ $(".formularioVenta").on("change", "input.nuevaCantidadProducto", function(){
 	      title: "La cantidad supera el Stock",
 	      text: "Solo hay "+$(this).attr("stock")+" unidades!",
 	      type: "error",
-	      confirmButtonText: "Cerrar!"
+	      confirmButtonText: "Cerrar"
 	    });
 
 	}
@@ -1480,12 +1452,13 @@ $(".formularioVenta").on("change", "input.nuevoDescuentoLinealPorcentual", funct
     else {
       $(this).val(0);
       descuentoFijo.val(0);
+
       swal({
-          title: "Descuento Invalido",
-          text: " El descuento global esta siendo efectuado",
-          type: " error",
-          confirmButtonText: "Cerrar!"
-        });
+        type: "error",
+        title: "Descuento Invalido",
+        text: "El descuento global esta siendo efectuado!",
+        confirmButtonText: "Cerrar"
+      });
     }
 
 })
@@ -1537,16 +1510,15 @@ $(".formularioVenta").on("change", "input.nuevoDescuentoLinealFijo", function(){
       else {
         $(this).val(0);
         descuentoPorcentual.val(0);
+
         swal({
-    	      title: "Descuento Invalido",
-    	      text: " El descuento global esta siendo efectuado",
-    	      type: " error",
-    	      confirmButtonText: "Cerrar!"
-    	    });
-
+          type: "error",
+  	      title: "Descuento Invalido",
+  	      text: "El descuento global esta siendo efectuado!",
+          showConfirmButton: true,
+  	      confirmButtonText: "Cerrar"
+    	  });
       }
-
-
 })
 
 /*=============================================
@@ -1660,26 +1632,27 @@ CUANDO CAMBIA EL IMPUESTO
 
 $("#nuevoDescuentoPorcentual").change(function(){
 
-  sumarTotalPrecios()
-  var MontoBruto = $("#MontoBruto").val();
-  var MontoReal = $("#MontoReal").val();
-  if(MontoBruto==MontoReal)
-  {
-	   agregarDescuentoFijo();
-  }
-  else
-  {
-    $(this).val(0);
-    $("#nuevoDescuentoFijo").val(0);
+    sumarTotalPrecios()
+    var MontoBruto = $("#MontoBruto").val();
+    var MontoReal = $("#MontoReal").val();
 
-		swal({
-	      title: "Descuento Invalido",
-	      text: " El descuento esta siendo efectuado por item",
-	      type: " error",
-	      confirmButtonText: "Cerrar!"
-	    });
+    if(MontoBruto==MontoReal){
+        agregarDescuentoFijo();
+    }
 
-  }
+    else{
+        $(this).val(0);
+        $("#nuevoDescuentoFijo").val(0);
+
+      	swal({
+            type: "error",
+            title: "Descuento Invalido",
+            text: "El descuento esta siendo efectuado por item!",
+            showConfirmButton: true,
+            confirmButtonText: "Cerrar",
+          });
+
+    }
 
 });
 
@@ -1733,10 +1706,11 @@ $("#nuevoDescuentoFijo").change(function(){
     $("#nuevoDescuentoPorcentual").val(0);
 
 		swal({
+        type: "error",
 	      title: "Descuento Invalido",
-	      text: " El descuento esta siendo efectuado por item",
-	      type: " error",
-	      confirmButtonText: "Cerrar!"
+	      text: "El descuento esta siendo efectuado por item!",
+        showConfirmButton: true,
+	      confirmButtonText: "Cerrar"
 	    });
 
   }
@@ -1778,10 +1752,11 @@ function verificarDuplicidad(id)
     }
     else {
       swal({
+          type: "error",
           title: "Producto Repetido",
-          text: " El producto ya existe en la venta",
-          type: " error",
-          confirmButtonText: "Cerrar!"
+          text: "El producto ya existe en la venta!",
+          showConfirmButton: true,
+          confirmButtonText: "Cerrar"
         });
       return false;
     }

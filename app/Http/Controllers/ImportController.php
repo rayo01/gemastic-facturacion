@@ -20,7 +20,7 @@ class ImportController extends Controller
     $datos=Excel::load('/public/Ubigeos.csv')->get();
     //$datos=$reader->get();
     set_time_limit(120);
-    if(count(DB::table('ubigeos'))==0)
+    if(DB::table('ubigeos')->get()->isEmpty())
     {
        foreach ($datos as $key => $ubigeo)
        {
@@ -37,10 +37,9 @@ class ImportController extends Controller
              DB::table('ubigeos')->insert($arr);
              return redirect('/home');
          }
-       }
-     //return redirect('/home');
+    }
+    else
+     return redirect('/home');
   }
-
-   //return Ubigeo::all();
 
 }
